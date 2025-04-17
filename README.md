@@ -16,8 +16,6 @@ which you can find in `.env.example` as well:
 ```dotenv
 DATABASE_URL=postgresql://user:password@localhost:5432/eas-sepolia
 INFURA_API_KEY=
-INFURA_IPFS_USER=
-INFURA_IPFS_PASS=
 ALCHEMY_ARBITRUM_API_KEY=
 ALCHEMY_SEPOLIA_API_KEY=
 ALCHEMY_OPTIMISM_GOERLI_API_KEY=
