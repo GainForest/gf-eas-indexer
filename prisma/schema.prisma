@@ -93,4 +93,6 @@ model EcocertsInProject {
   project_id     String
   ecocert_id     String
   attestation_id String
+  attester       String
+  timestamp      Int
 }

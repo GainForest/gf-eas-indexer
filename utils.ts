@@ -654,6 +654,8 @@ export async function processCreatedEcocertInProject(
         project_id: decodedEcocertInProjectAttestationData[0],
         ecocert_id: decodedEcocertInProjectAttestationData[1],
         attestation_id: attestation.id,
+        attester: attestation.attester,
+        timestamp: attestation.time,
       },
     });
   } catch (error) {
