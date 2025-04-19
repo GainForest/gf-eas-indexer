@@ -741,7 +741,7 @@ export async function getAndUpdateAllRelevantLogs() {
 
   const serviceStatPropertyName = "latestAttestationBlockNum";
 
-  const { fromBlock } = await getStartData(serviceStatPropertyName);
+  const fromBlock = await provider.getBlockNumber() - 1;
 
   let currentBlock = fromBlock + 1;
   const latestBlock = await provider.getBlockNumber();
@@ -793,7 +793,7 @@ export async function getAndUpdateAllRelevantLogs() {
     currentBlock += batchSize;
     await timeout(requestDelay);
   }
-
+  console.log("Updated all relevant logs from all blocks until now.")
   console.log("total  logs", allLogs.length);
 }
 
