@@ -17,7 +17,7 @@ services:
     environment:
       CHAIN_ID: ${CHAIN_ID}
       INFURA_API_KEY: ${INFURA_API_KEY}
-      DATABASE_URL: "postgresql://postgres:postgresPassword@eas-postgres:5432/eas-index"
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - eas-postgres
     ports:
