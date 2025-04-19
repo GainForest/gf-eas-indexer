@@ -6,6 +6,7 @@ import pLimit from "p-limit";
 import { Eas__factory, EasSchema__factory } from "./types/ethers-contracts";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import * as fs from "fs";
+import { SCHEMA_IDS } from "./constants";
 
 const batchSize = process.env.BATCH_SIZE
   ? Number(process.env.BATCH_SIZE)
@@ -542,6 +543,7 @@ export async function createAttestationsForLogs(logs: ethers.providers.Log[]) {
 
         await prisma.attestation.create({ data: attestation });
         await processCreatedAttestation(attestation);
+        await processCreatedEcocertInProject(attestation);
       }
     } else {
       console.log("Skipped creating attestation due to max retries.");
@@ -629,6 +631,37 @@ export async function processRevokedAttestation(
   }
 }
 
+export async function processCreatedEcocertInProject(
+  attestation: Attestation
+): Promise<void> {
+  console.log("Processing created ecocert in project", attestation);
+  if (SCHEMA_IDS.includes(attestation.schemaId)) {
+    console.log("relevant attestation!");
+  } else {
+    console.log("attestation doesn't have a schema id in the list of relevant schema ids");
+    return;
+  }
+
+  try {
+    const decodedEcocertInProjectAttestationData = ethers.utils.defaultAbiCoder.decode(
+      ["string", "string"],
+      attestation.data
+    );
+
+    console.log("decodedEcocertInProjectAttestationData", decodedEcocertInProjectAttestationData);
+    await prisma.ecocertsInProject.create({
+      data: {
+        project_id: decodedEcocertInProjectAttestationData[0],
+        ecocert_id: decodedEcocertInProjectAttestationData[1],
+        attestation_id: attestation.id,
+      },
+    });
+  } catch (error) {
+    console.log("Error processing ecocert in project:", error);
+  }
+}
+
+// Processes attestation that creates a new schema name
 export async function processCreatedAttestation(
   attestation: Attestation
 ): Promise<void> {
