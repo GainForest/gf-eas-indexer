@@ -16,9 +16,6 @@ which you can find in `.env.example` as well:
 ```dotenv
 DATABASE_URL=postgresql://user:password@localhost:5432/eas-sepolia
 INFURA_API_KEY=
-ALCHEMY_ARBITRUM_API_KEY=
-ALCHEMY_SEPOLIA_API_KEY=
-ALCHEMY_OPTIMISM_GOERLI_API_KEY=
 #POLLING_INTERVAL=60000
 #DISABLE_LISTENER=true
 #REQUEST_DELAY=500 # How many ms to wait before making a request to RPC (useful for free plans)
