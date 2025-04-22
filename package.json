@@ -21,6 +21,7 @@
     "ethers": "^5.7.2",
     "graphql": "^15.8.0",
     "graphql-fields": "^2.0.3",
+    "graphql-scalars": "^1.20.1",
     "p-limit": "^3.0.2",
     "prisma": "^4.13.0",
     "reflect-metadata": "^0.1.13",
