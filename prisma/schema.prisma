@@ -96,3 +96,11 @@ model EcocertsInProject {
   attester       String
   timestamp      Int
 }
+
+model Transactions {
+  id              BigInt @id @default(autoincrement())
+  attester        String
+  timestamp       Int
+  transaction_id  String
+  message         String
+}
