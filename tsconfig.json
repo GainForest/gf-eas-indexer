@@ -8,6 +8,12 @@
       "es2018",
       "esnext.asynciterable"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "@generated/*": [
+        "./node_modules/@generated/*"
+      ]
+    },
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
