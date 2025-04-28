@@ -544,6 +544,7 @@ export async function createAttestationsForLogs(logs: ethers.providers.Log[]) {
         await prisma.attestation.create({ data: attestation });
         await processCreatedAttestation(attestation);
         await processCreatedEcocertInProject(attestation);
+        await processCreatedTransaction(attestation);
       }
     } else {
       console.log("Skipped creating attestation due to max retries.");
@@ -699,6 +700,37 @@ export async function processCreatedAttestation(
       console.log("Error: Unable to decode schema name", e);
       return;
     }
+  }
+}
+
+export async function processCreatedTransaction(
+  attestation: Attestation
+): Promise<void> {
+  console.log("Processing created transaction", attestation);
+  if (attestation.schemaId === SCHEMA_IDS.TRANSACTION_DESCRIPTION) {
+    console.log("relevant attestation!");
+  } else {
+    console.log("attestation is not a transaction description");
+    return;
+  }
+
+  try {
+    const decodedTransactionData = ethers.utils.defaultAbiCoder.decode(
+      ["string"],
+      attestation.data
+    );
+
+    console.log("decodedTransactionData", decodedTransactionData);
+    await prisma.transactions.create({
+      data: {
+        attester: attestation.attester,
+        timestamp: attestation.time,
+        transaction_id: attestation.id,
+        message: decodedTransactionData[0],
+      },
+    });
+  } catch (error) {
+    console.log("Error processing transaction:", error);
   }
 }
 
