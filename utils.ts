@@ -523,6 +523,44 @@ export async function createSchemasFromLogs(logs: ethers.providers.Log[]) {
   }
 }
 
+export async function processCreatedAttestation(
+  attestation: Attestation
+): Promise<void> {
+  if (attestation.schemaId === schemaNameUID) {
+    try {
+      const decodedNameAttestationData = ethers.utils.defaultAbiCoder.decode(
+        ["bytes32", "string"],
+        attestation.data
+      );
+
+      const schema = await prisma.schema.findUnique({
+        where: { id: decodedNameAttestationData[0] },
+      });
+
+      if (!schema) {
+        console.log("Error: Schema doesnt exist!");
+        return;
+      }
+
+      console.log("Adding new schema name: ", decodedNameAttestationData[1]);
+
+      await prisma.schemaName.create({
+        data: {
+          name: decodedNameAttestationData[1],
+          schemaId: schema.id,
+          time: dayjs().unix(),
+          attesterAddress: attestation.attester,
+          isCreator:
+            attestation.attester.toLowerCase() === schema.creator.toLowerCase(),
+        },
+      });
+    } catch (e) {
+      console.log("Error: Unable to decode schema name", e);
+      return;
+    }
+  }
+}
+
 export async function createAttestationsForLogs(logs: ethers.providers.Log[]) {
   const promises = logs.map((log) =>
     limit(() => getFormattedAttestationFromLog(log))
@@ -544,6 +582,7 @@ export async function createAttestationsForLogs(logs: ethers.providers.Log[]) {
         await prisma.attestation.create({ data: attestation });
         await processCreatedAttestation(attestation);
         await processCreatedEcocertInProject(attestation);
+        await processTransactionDescription(attestation);
       }
     } else {
       console.log("Skipped creating attestation due to max retries.");
@@ -635,7 +674,7 @@ export async function processCreatedEcocertInProject(
   attestation: Attestation
 ): Promise<void> {
   console.log("Processing created ecocert in project", attestation);
-  if (Object.values(SCHEMA_IDS).includes(attestation.schemaId)) {
+  if (attestation.schemaId === SCHEMA_IDS.ECOCERTS_IN_PROJECT) {
     console.log("relevant attestation!");
   } else {
     console.log("attestation doesn't have a schema id in the list of relevant schema ids");
@@ -663,42 +702,30 @@ export async function processCreatedEcocertInProject(
   }
 }
 
-// Processes attestation that creates a new schema name
-export async function processCreatedAttestation(
+export async function processTransactionDescription(
   attestation: Attestation
 ): Promise<void> {
-  if (attestation.schemaId === schemaNameUID) {
-    try {
-      const decodedNameAttestationData = ethers.utils.defaultAbiCoder.decode(
-        ["bytes32", "string"],
-        attestation.data
-      );
+  if (attestation.schemaId === SCHEMA_IDS.TRANSACTION_DESCRIPTION) {
+    console.log("found 'transaction description' attestation!")
 
-      const schema = await prisma.schema.findUnique({
-        where: { id: decodedNameAttestationData[0] },
-      });
+  try {
+    const decodedTransactionData = ethers.utils.defaultAbiCoder.decode(
+      ["string"],
+      attestation.data
+    );
 
-      if (!schema) {
-        console.log("Error: Schema doesnt exist!");
-        return;
-      }
-
-      console.log("Adding new schema name: ", decodedNameAttestationData[1]);
-
-      await prisma.schemaName.create({
-        data: {
-          name: decodedNameAttestationData[1],
-          schemaId: schema.id,
-          time: dayjs().unix(),
-          attesterAddress: attestation.attester,
-          isCreator:
-            attestation.attester.toLowerCase() === schema.creator.toLowerCase(),
-        },
-      });
-    } catch (e) {
-      console.log("Error: Unable to decode schema name", e);
-      return;
-    }
+    console.log("decodedTransactionData", decodedTransactionData);
+    await prisma.transactions.create({
+      data: {
+        attester: attestation.attester,
+        timestamp: attestation.time,
+        transaction_id: attestation.id,
+        message: decodedTransactionData[0],
+      },
+    });
+  } catch (error) {
+    console.log("Error processing transaction:", error);
+  }
   }
 }
 
