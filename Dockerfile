@@ -27,6 +27,8 @@ RUN chmod +x /app/entrypoint.sh
 # Install dependencies and build
 RUN yarn install
 RUN yarn add -D prisma@4.13.0
+RUN yarn add @prisma/client@4.13.0
+RUN yarn prisma generate
 RUN yarn build
 
 ENTRYPOINT ["/app/entrypoint.sh"]
