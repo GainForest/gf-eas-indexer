@@ -6,6 +6,10 @@ ENV NODE_ENV=production
 RUN apk update && apk upgrade
 RUN apk add --no-cache openssl
 
+# Enable Corepack and set up Yarn
+RUN corepack enable
+RUN corepack prepare yarn@4.6.0 --activate
+
 # Set environment variables
 ENV DATABASE_URL=${DATABASE_URL}
 ENV INFURA_API_KEY=${INFURA_API_KEY}
