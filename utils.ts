@@ -808,7 +808,7 @@ export async function getAndUpdateAllRelevantLogs() {
 
   const serviceStatPropertyName = "latestAttestationBlockNum";
 
-  const fromBlock = await provider.getBlockNumber() - 1000;
+  const fromBlock = 25224979 - 1000;
 
   let currentBlock = fromBlock;
   const latestBlock = await provider.getBlockNumber();
