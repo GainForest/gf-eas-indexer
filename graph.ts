@@ -3,7 +3,7 @@ import {
   resolvers,
   applyResolversEnhanceMap,
   ResolversEnhanceMap,
-} from "@generated/type-graphql";
+} from './node_modules/@generated/type-graphql';
 import {
   AuthChecker,
   Authorized,
