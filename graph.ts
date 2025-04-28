@@ -121,6 +121,32 @@ export async function startGraph() {
       deleteOneServiceStat: [Authorized(["ADMIN"])],
       deleteManyServiceStat: [Authorized(["ADMIN"])],
     },
+    Transactions: {
+      transaction: [Authorized()],
+      transactions: [Authorized()],
+      findFirstTransaction: [Authorized()],
+      aggregateTransaction: [Authorized()],
+      createOneTransaction: [Authorized(["ADMIN"])],
+      createManyTransaction: [Authorized(["ADMIN"])],
+      upsertOneTransaction: [Authorized(["ADMIN"])],
+      updateOneTransaction: [Authorized(["ADMIN"])],
+      updateManyTransaction: [Authorized(["ADMIN"])],
+      deleteOneTransaction: [Authorized(["ADMIN"])],
+      deleteManyTransaction: [Authorized(["ADMIN"])],
+    },
+    EcocertsInProject: {
+      ecocertsInProject: [Authorized()],
+      ecocertsInProjects: [Authorized()],
+      findFirstEcocertsInProject: [Authorized()],
+      aggregateEcocertsInProject: [Authorized()],
+      createOneEcocertsInProject: [Authorized(["ADMIN"])],
+      createManyEcocertsInProject: [Authorized(["ADMIN"])],
+      upsertOneEcocertsInProject: [Authorized(["ADMIN"])],
+      updateOneEcocertsInProject: [Authorized(["ADMIN"])],
+      updateManyEcocertsInProject: [Authorized(["ADMIN"])],
+      deleteOneEcocertsInProject: [Authorized(["ADMIN"])],
+      deleteManyEcocertsInProject: [Authorized(["ADMIN"])],
+    },
   };
 
   applyResolversEnhanceMap(resolversEnhanceMap);
