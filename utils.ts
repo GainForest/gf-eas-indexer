@@ -635,7 +635,7 @@ export async function processCreatedEcocertInProject(
   attestation: Attestation
 ): Promise<void> {
   console.log("Processing created ecocert in project", attestation);
-  if (Object.values(SCHEMA_IDS).includes(attestation.schemaId)) {
+  if (attestation.schemaId === SCHEMA_IDS.ECOCERTS_IN_PROJECT) {
     console.log("relevant attestation!");
   } else {
     console.log("attestation doesn't have a schema id in the list of relevant schema ids");
