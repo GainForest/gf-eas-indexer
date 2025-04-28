@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "typechain --target ethers-v5 ./abis/*.json",
-    "start": "ts-node start.ts"
+    "start": "ts-node start.ts",
+    "build": "yarn && npx prisma generate"
   },
   "keywords": [],
   "author": "",
